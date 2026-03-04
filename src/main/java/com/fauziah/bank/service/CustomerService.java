@@ -1,0 +1,175 @@
+package com.fauziah.bank.service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.fauziah.bank.dto.CustomerDTO;
+import com.fauziah.bank.entity.Customer;
+import com.fauziah.bank.handler.ResponseHandler;
+import com.fauziah.bank.repo.CustomerRepo;
+
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
+public class CustomerService {
+    private final CustomerRepo customerRepo;
+    
+    public CustomerService(CustomerRepo customerRepo){
+        this.customerRepo = customerRepo;
+    }
+
+    //CREATE
+    public ResponseHandler createCustomer(CustomerDTO request){
+        ResponseHandler response = new ResponseHandler();
+        Customer customer = new Customer();
+        
+        try {
+            Optional<Customer> isCustomer = customerRepo.findByNumberId(request.getNumberId());
+            if(isCustomer.isPresent()){
+                response.setStatus("failed");
+                response.setMessage("data is available");
+            }else{
+                customer.setNumberId(request.getNumberId());
+                customer.setFullname(request.getFullname());
+                customer.setAddress(request.getAddress());
+                customer.setPlaceOfBirth(request.getPlaceOfBirth());
+                customer.setDob(request.getDob());
+                customer.setPhoneNumber(request.getPhoneNumber());
+                customer.setCreatedDate(LocalDate.now());
+    
+                customerRepo.save(customer);
+    
+                response.setStatus("success");
+                response.setMessage("success create data");
+                response.setData(customer);
+            }
+        } catch (Exception e) {
+            response.setStatus("failed");
+            response.setError(e.getClass().getSimpleName());
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
+    }
+
+    //FIND ALL
+    public ResponseHandler getAllCustomer(){
+        ResponseHandler response = new ResponseHandler();
+        try {
+            List<Customer> customer = customerRepo.findAll();
+            
+            if(customer.isEmpty()){
+                response.setStatus("success");
+                response.setMessage("data is empty");
+            }else{
+                response.setStatus("success");
+                response.setMessage("success fetch data");
+                response.setData(customer);
+            }
+        } catch (Exception e) {
+            response.setStatus("failed");
+            response.setError(e.getClass().getSimpleName());
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
+    }
+
+    //FIND BY NUMBER ID
+    public ResponseHandler getCustomerByNumberId(String request){
+        ResponseHandler response = new ResponseHandler();
+        
+        try {
+            Optional<Customer> customer = customerRepo.findByNumberId(request);
+            
+            if(!customer.isPresent()){
+                response.setStatus("success");
+                response.setMessage("data not found");
+            }else{
+                response.setStatus("success");
+                response.setMessage("success fetch data");
+                response.setData(customer);
+            }
+        } catch (Exception e) {
+            response.setStatus("failed");
+            response.setError(e.getClass().getSimpleName());
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
+    }
+
+    //UPDATE
+    public ResponseHandler updateCustomer(String id, CustomerDTO request){
+        ResponseHandler response = new ResponseHandler();
+        
+        try {
+            Optional<Customer> isCustomer = customerRepo.findByNumberId(id);
+            if(!isCustomer.isPresent()){
+                response.setStatus("failed");
+                response.setMessage("data not found");
+            }else{
+                Customer customer = isCustomer.get();
+                if(request.getFullname() != null){
+                    customer.setFullname(request.getFullname());
+                }
+                if(request.getAddress() != null){
+                    customer.setAddress(request.getAddress());
+                }
+                if(request.getPlaceOfBirth() != null){
+                    customer.setPlaceOfBirth(request.getPlaceOfBirth());
+                }
+                if(request.getDob() != null){
+                    customer.setDob(request.getDob());
+                }
+                if(request.getPhoneNumber() != null){
+                    customer.setPhoneNumber(request.getPhoneNumber());
+                }
+
+                customer.setModifiedBy(2);
+                customer.setModifiedDate(LocalDate.now());
+
+                customerRepo.save(customer);
+    
+                response.setStatus("success");
+                response.setMessage("success create data");
+                response.setData(customer);
+            }
+        } catch (Exception e) {
+            response.setStatus("failed");
+            response.setError(e.getClass().getSimpleName());
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
+    }
+
+    //DELETE
+    public ResponseHandler deleteCustomer(String request){
+        ResponseHandler response = new ResponseHandler();
+
+        try {
+            Optional<Customer> customer = customerRepo.findByNumberId(request);
+            
+            if(!customer.isPresent()){
+                response.setStatus("success");
+                response.setMessage("data not found");
+            }else{
+                customerRepo.deleteByNumberId(request);
+                response.setStatus("success");
+                response.setMessage("success delete data with number id: " + request);
+            }
+            
+        } catch (Exception e) {
+            response.setStatus("failed");
+            response.setError(e.getClass().getSimpleName());
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
+    }
+}
