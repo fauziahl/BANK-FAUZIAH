@@ -1,0 +1,23 @@
+server:
+    port: 8080
+spring:
+    application:
+        name: bank
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        username: postgres
+        password: 996643
+        url: jdbc:postgresql://localhost:5433/postgres
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+    file:
+        name: /app/logs/bank.log
+    level:
+        root: INFO
