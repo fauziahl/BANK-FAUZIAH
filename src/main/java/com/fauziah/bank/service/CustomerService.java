@@ -33,8 +33,8 @@ public class CustomerService {
         try {
             Optional<Customer> isCustomer = customerRepo.findByNumberId(request.getNumberId());
             if(isCustomer.isPresent()){
-                response.setStatus("failed");
-                response.setMessage("data is available");
+                response.setStatus("Failed");
+                response.setMessage("Data is available");
             }else{
                 customer.setNumberId(request.getNumberId());
                 customer.setFullname(request.getFullname());
@@ -46,13 +46,13 @@ public class CustomerService {
     
                 customerRepo.save(customer);
     
-                response.setStatus("success");
-                response.setMessage("success create data");
+                response.setStatus("Success");
+                response.setMessage("Success create data");
                 logger.info("Create customer: {}", customer);
             }
             
         } catch (Exception e) {
-            response.setStatus("failed");
+            response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
         }
@@ -68,15 +68,15 @@ public class CustomerService {
             List<Customer> customer = customerRepo.findAll();
             
             if(customer.isEmpty()){
-                response.setStatus("success");
-                response.setMessage("data is empty");
+                response.setStatus("Success");
+                response.setMessage("Data is empty");
             }else{
-                response.setStatus("success");
-                response.setMessage("success fetch data");
+                response.setStatus("Success");
+                response.setMessage("Success fetch data");
                 response.setData(customer);
             }
         } catch (Exception e) {
-            response.setStatus("failed");
+            response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
         }
@@ -93,15 +93,15 @@ public class CustomerService {
             Optional<Customer> customer = customerRepo.findByNumberId(request);
             
             if(!customer.isPresent()){
-                response.setStatus("success");
-                response.setMessage("data not found");
+                response.setStatus("Success");
+                response.setMessage("Data not found");
             }else{
-                response.setStatus("success");
-                response.setMessage("success fetch data");
+                response.setStatus("Success");
+                response.setMessage("Success fetch data");
                 response.setData(customer);
             }
         } catch (Exception e) {
-            response.setStatus("failed");
+            response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
         }
@@ -117,8 +117,8 @@ public class CustomerService {
         try {
             Optional<Customer> isCustomer = customerRepo.findByNumberId(id);
             if(!isCustomer.isPresent()){
-                response.setStatus("failed");
-                response.setMessage("data not found");
+                response.setStatus("Failed");
+                response.setMessage("Data not found");
             }else{
                 Customer customer = isCustomer.get();
                 if(request.getFullname() != null){
@@ -142,13 +142,13 @@ public class CustomerService {
 
                 customerRepo.save(customer);
     
-                response.setStatus("success");
-                response.setMessage("success create data");
+                response.setStatus("Success");
+                response.setMessage("Success create data");
                 response.setData(customer);
                 logger.info("Update customer: {}", customer);
             }
         } catch (Exception e) {
-            response.setStatus("failed");
+            response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
         }
@@ -165,16 +165,16 @@ public class CustomerService {
             Optional<Customer> customer = customerRepo.findByNumberId(request);
             
             if(!customer.isPresent()){
-                response.setStatus("success");
-                response.setMessage("data not found");
+                response.setStatus("Success");
+                response.setMessage("Data not found");
             }else{
                 customerRepo.deleteByNumberId(request);
-                response.setStatus("success");
-                response.setMessage("success delete data with number id: " + request);
+                response.setStatus("Success");
+                response.setMessage("Success delete data with number id: " + request);
             }
             
         } catch (Exception e) {
-            response.setStatus("failed");
+            response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
         }
