@@ -9,6 +9,7 @@ import com.fauziah.bank.service.CustomerService;
 
 import jakarta.validation.Valid;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class CustomerController {
 
     private CustomerService customerService;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     public CustomerController(CustomerService customerService){
         this.customerService = customerService;
@@ -33,16 +35,26 @@ public class CustomerController {
     public ResponseHandler createCustomer(@RequestBody @Valid CustomerDTO request, BindingResult bindingResult){
         ResponseHandler response = new ResponseHandler();
 
-        System.out.println("fullname = '" + request.getFullname() + "'");
-        System.out.println("bindingResult.hasErrors() = " + bindingResult.hasErrors());
+        logger.info("Customer request: ", request);
 
         if(bindingResult.hasErrors()){
-            response.setStatus("fail");
+            response.setStatus("failed");
             response.setMessage(bindingResult.getFieldError().getDefaultMessage());
+            logger.warn("Validation error on field: {}, message: {}",
+                        bindingResult.getFieldError().getField(), 
+                        bindingResult.getFieldError().getDefaultMessage());
             return response;
         }
 
-        response = customerService.createCustomer(request);
+        try {
+            response = customerService.createCustomer(request);
+        } catch (Exception e) {
+            logger.error("Error create customer", e);
+
+            response.setStatus("error");
+            response.setMessage("Internal server error");
+        }
+
         return response;
     }
 
@@ -51,7 +63,15 @@ public class CustomerController {
     public ResponseHandler getAllCustomer(){
         ResponseHandler response = new ResponseHandler();
 
-        response = customerService.getAllCustomer();
+        try {
+            response = customerService.getAllCustomer();
+        } catch (Exception e) {
+            logger.error("Error get all data customer", e);
+
+            response.setStatus("error");
+            response.setMessage("Internal server error");
+        }
+
         return response;
     }
 
@@ -59,8 +79,16 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseHandler getCustomerById(@PathVariable("id") String request){
         ResponseHandler response = new ResponseHandler();
+        
+        try {
+            response = customerService.getCustomerByNumberId(request);
+        } catch (Exception e) {
+            logger.error("Error get data customer", e);
 
-        response = customerService.getCustomerByNumberId(request);
+            response.setStatus("error");
+            response.setMessage("Internal server error");
+        }
+
         return response;
     }
 
@@ -69,13 +97,15 @@ public class CustomerController {
     public ResponseHandler createCustomer(@PathVariable String id, @RequestBody CustomerDTO request, BindingResult bindingResult){
         ResponseHandler response = new ResponseHandler();
 
-        if(bindingResult.hasErrors()){
-            response.setStatus("fail");
-            response.setMessage(bindingResult.getFieldError().getDefaultMessage());
-            return response;
+        try {
+            response = customerService.updateCustomer(id, request);
+        } catch (Exception e) {
+            logger.error("Error update data customer", e);
+
+            response.setStatus("error");
+            response.setMessage("Internal server error");
         }
 
-        response = customerService.updateCustomer(id, request);
         return response;
     }
 
@@ -84,7 +114,14 @@ public class CustomerController {
     public ResponseHandler deleteCustomerById(@PathVariable("id") String request){
         ResponseHandler response = new ResponseHandler();
 
-        response = customerService.deleteCustomer(request);
+        try {
+            response = customerService.deleteCustomer(request);
+        } catch (Exception e) {
+            logger.error("Error delete data customer", e);
+
+            response.setStatus("error");
+            response.setMessage("Internal server error");
+        }
         return response;
     }
 }

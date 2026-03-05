@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fauziah.bank.dto.CustomerDTO;
@@ -17,6 +18,8 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class CustomerService {
     private final CustomerRepo customerRepo;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CustomerService.class);
+
     
     public CustomerService(CustomerRepo customerRepo){
         this.customerRepo = customerRepo;
@@ -45,14 +48,16 @@ public class CustomerService {
     
                 response.setStatus("success");
                 response.setMessage("success create data");
-                response.setData(customer);
+                logger.info("Create customer: {}", customer);
             }
+            
         } catch (Exception e) {
             response.setStatus("failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
         }
-
+        
+        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -76,6 +81,7 @@ public class CustomerService {
             response.setMessage(e.getMessage());
         }
 
+        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -100,6 +106,7 @@ public class CustomerService {
             response.setMessage(e.getMessage());
         }
 
+        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -138,6 +145,7 @@ public class CustomerService {
                 response.setStatus("success");
                 response.setMessage("success create data");
                 response.setData(customer);
+                logger.info("Update customer: {}", customer);
             }
         } catch (Exception e) {
             response.setStatus("failed");
@@ -145,6 +153,7 @@ public class CustomerService {
             response.setMessage(e.getMessage());
         }
 
+        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -170,6 +179,7 @@ public class CustomerService {
             response.setMessage(e.getMessage());
         }
 
+        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 }
