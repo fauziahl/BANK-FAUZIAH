@@ -71,67 +71,28 @@ public class CustomerController {
     //FIND ALL
     @GetMapping("")
     public ResponseHandler getAllCustomer(){
-        ResponseHandler response = new ResponseHandler();
-
-        try {
-            response = customerService.getAllCustomer();
-        } catch (Exception e) {
-            logger.error("Error get all data customer", e);
-
-            response.setStatus("Error");
-            response.setMessage("Internal server error");
-        }
-
-        return response;
+        logger.info("Get all customer request ");
+        return customerService.getAllCustomer();
     }
 
     //FIND BY NUMBER ID
     @GetMapping("/{id}")
     public ResponseHandler getCustomerById(@PathVariable("id") String request){
-        ResponseHandler response = new ResponseHandler();
-        
-        try {
-            response = customerService.getCustomerByNumberId(request);
-        } catch (Exception e) {
-            logger.error("Error get data customer", e);
-
-            response.setStatus("Error");
-            response.setMessage("Internal server error");
-        }
-
-        return response;
+        logger.info("Get customer request id {}", request);
+        return customerService.getCustomerByNumberId(request);
     }
 
     //UPDATE
     @PutMapping("/{id}")
     public ResponseHandler createCustomer(@PathVariable String id, @RequestBody CustomerDTO request, BindingResult bindingResult){
-        ResponseHandler response = new ResponseHandler();
-
-        try {
-            response = customerService.updateCustomer(id, request);
-        } catch (Exception e) {
-            logger.error("Error update data customer", e);
-
-            response.setStatus("Error");
-            response.setMessage("Internal server error");
-        }
-
-        return response;
+        logger.info("Update customer request id {} data{}", id, request);
+        return customerService.updateCustomer(id, request);
     }
 
     //DELETE
     @DeleteMapping("/{id}")
     public ResponseHandler deleteCustomerById(@PathVariable("id") String request){
-        ResponseHandler response = new ResponseHandler();
-
-        try {
-            response = customerService.deleteCustomer(request);
-        } catch (Exception e) {
-            logger.error("Error delete data customer", e);
-
-            response.setStatus("Error");
-            response.setMessage("Internal server error");
-        }
-        return response;
+        logger.info("Delete customer request id {}", request);
+        return customerService.deleteCustomer(request);
     }
 }

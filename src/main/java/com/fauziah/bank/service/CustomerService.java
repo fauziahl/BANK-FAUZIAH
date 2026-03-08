@@ -48,16 +48,16 @@ public class CustomerService {
     
                 response.setStatus("Success");
                 response.setMessage("Success create data");
-                logger.info("Create customer: {}", customer);
+                logger.info("Success to create customer {}", customer);
             }
             
         } catch (Exception e) {
             response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
+            logger.error("Failed to create customer {}", request, e);
         }
         
-        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -75,13 +75,15 @@ public class CustomerService {
                 response.setMessage("Success fetch data");
                 response.setData(customer);
             }
+            logger.info("Success to get all customer");
+
         } catch (Exception e) {
             response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
+            logger.error("Failed to get all customer", e);
         }
 
-        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -93,20 +95,22 @@ public class CustomerService {
             Optional<Customer> customer = customerRepo.findByNumberId(request);
             
             if(!customer.isPresent()){
-                response.setStatus("Success");
+                response.setStatus("Failed");
                 response.setMessage("Data not found");
             }else{
                 response.setStatus("Success");
                 response.setMessage("Success fetch data");
                 response.setData(customer);
             }
+            logger.info("Success to get customer with number id {} ", request);
+        
         } catch (Exception e) {
             response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
+            logger.error("Failed to get customer with number id {}", request, e);
         }
 
-        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -145,15 +149,16 @@ public class CustomerService {
                 response.setStatus("Success");
                 response.setMessage("Success create data");
                 response.setData(customer);
-                logger.info("Update customer: {}", customer);
+                logger.info("Success to update customer with number id {} data {}", id, customer);
             }
+        
         } catch (Exception e) {
             response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
+            logger.error("Failed to update customer with number id {}", request, e);
         }
 
-        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 
@@ -172,14 +177,15 @@ public class CustomerService {
                 response.setStatus("Success");
                 response.setMessage("Success delete data with number id: " + request);
             }
-            
+            logger.info("Success to delete customer with number id {}", request);
+
         } catch (Exception e) {
             response.setStatus("Failed");
             response.setError(e.getClass().getSimpleName());
             response.setMessage(e.getMessage());
+            logger.error("Failed to delete customer with number id {}", request, e);
         }
 
-        logger.info("Status: {}, Message: {}", response.getStatus(), response.getMessage());
         return response;
     }
 }
