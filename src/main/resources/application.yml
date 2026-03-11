@@ -1,5 +1,5 @@
 server:
-    port: 8081
+    port: 8080
 spring:
     application:
         name: bank
@@ -7,6 +7,7 @@ spring:
         driver-class-name: org.postgresql.Driver
         username: postgres
         password: 996643
+        # url: jdbc:postgresql://postgres:5432/postgres
         url: jdbc:postgresql://localhost:5432/postgres
     jpa:
         show-sql: true
@@ -17,6 +18,9 @@ spring:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
+    pattern:
+        console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+        file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     file:
         name: /app/logs/bank.log
     level:

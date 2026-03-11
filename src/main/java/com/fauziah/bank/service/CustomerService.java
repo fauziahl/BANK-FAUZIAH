@@ -141,7 +141,7 @@ public class CustomerService {
                     customer.setPhoneNumber(request.getPhoneNumber());
                 }
 
-                customer.setModifiedBy(2);
+                customer.setModifiedBy("2");
                 customer.setModifiedDate(LocalDate.now());
 
                 customerRepo.save(customer);

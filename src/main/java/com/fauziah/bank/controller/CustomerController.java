@@ -9,9 +9,6 @@ import com.fauziah.bank.service.CustomerService;
 
 import jakarta.validation.Valid;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,37 +32,9 @@ public class CustomerController {
 
     //CREATE
     @PostMapping("")
-    public ResponseHandler createCustomer(@RequestBody @Valid CustomerDTO request, BindingResult bindingResult){
-        ResponseHandler response = new ResponseHandler();
-
-        logger.info("Customer request: ", request);
-
-        Map<String, String> errors = new HashMap<>();
-
-        if(bindingResult.hasErrors()){
-            bindingResult.getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-            );
-
-            response.setStatus("Failed");
-            response.setError("Validation error");
-            response.setMessage("Error create customer");
-            response.setData(errors);
-            logger.warn("Validation error: {}", errors);
-
-            return response;
-        }
-
-        try {
-            response = customerService.createCustomer(request);
-        } catch (Exception e) {
-            logger.error("Error create customer", e);
-
-            response.setStatus("Error");
-            response.setMessage("Internal server error");
-        }
-
-        return response;
+    public ResponseHandler createCustomer(@RequestBody @Valid CustomerDTO request){
+        logger.info("Customer request: {}", request);
+        return customerService.createCustomer(request);
     }
 
     //FIND ALL
